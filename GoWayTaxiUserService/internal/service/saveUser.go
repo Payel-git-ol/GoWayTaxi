@@ -31,13 +31,13 @@ func SaveUser(user models.User) error {
 	return nil
 }
 
-func SaveDriver(driver models.Driver) error {
+func SaveDriver(driver models.DriverUs) error {
 	if database.DB == nil {
 		log.Println("❌ Database connection is not initialized")
 		return nil
 	}
 
-	var existingDriver models.Driver
+	var existingDriver models.DriverUs
 	result := database.DB.Where("email = ?", driver.Email).First(&existingDriver)
 
 	if result.Error == nil {
