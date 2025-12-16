@@ -2,10 +2,10 @@ package service
 
 import "GoWayTaxiUserService/pkg/models"
 
-func SaveUser() (string, error) {
-	return save(&models.User{})
+func SaveUser(user models.User) (string, error) {
+	return save(user)
 }
 
-func SaveDriver() (string, error) {
-	return save(&models.DriverUs{})
+func SaveDriver(driver models.DriverUs) (string, error) {
+	return save(driver)
 }

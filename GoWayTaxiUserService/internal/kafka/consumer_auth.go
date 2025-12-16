@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-func GetMessage(wg *sync.WaitGroup) {
+func GetMessageAuth(wg *sync.WaitGroup) {
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{"localhost:9092"},
 		Topic:   "user-created",
@@ -42,7 +42,7 @@ func processMessage(data []byte) error {
 		fmt.Printf("✅ Parsed as USER: ID=%d, Name=%s, Email=%s, Role=%s\n",
 			user.Id, user.Name, user.Email, user.Role)
 
-		err := service.SaveUser(user)
+		_, err := service.SaveUser(user)
 		if err != nil {
 			return err
 		}
@@ -55,7 +55,7 @@ func processMessage(data []byte) error {
 		fmt.Printf("🚗 Parsed as DRIVER: ID=%d, Name=%s, Email=%s, Role=%s\n",
 			driver.Id, driver.Name, driver.Email, driver.Role)
 
-		err := service.SaveDriver(driver)
+		_, err := service.SaveDriver(driver)
 		if err != nil {
 			return err
 		}
