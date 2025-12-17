@@ -14,11 +14,15 @@ func CreateOrderStart(order request.RequestOrder) {
 		UserId:         order.UserId,
 		DriverId:       order.DriverId,
 		TimeStartOrder: currentTime.Format("2006-01-02 15:04:05"),
-		Route:          order.Route,
 		CarId:          order.CarId,
 		OrderClass:     order.OrderClass,
+		City:           order.City,
+		StartPosition:  order.StartPosition,
+		EndPosition:    order.EndPosition,
+		Status:         "open",
 	}
 
+	database.DB.Model(&models.Driver{}).Where("id = ?", order.DriverId).Update("status", "busy")
 	database.DB.Create(&new_order)
 }
 
@@ -32,4 +36,5 @@ func CreateOrderEnd(orderId int, price float64) {
 			Price:        price,
 			Status:       "completed",
 		})
+	database.DB.Model(&models.Driver{}).Where("id = ?", orderId).Update("status", "available")
 }

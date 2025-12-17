@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"github.com/gofiber/fiber/v3"
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -20,12 +21,6 @@ func main() {
 	go kafka.GetMessageUserAndDriver(&wg)
 
 	app := fiber.New()
-
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"app": "GoWayTaxiRide",
-		})
-	})
 
 	app.Post("/create/taxi/order", func(c fiber.Ctx) error {
 		body := c.Body()
@@ -43,9 +38,10 @@ func main() {
 		})
 	})
 
-	app.Post("/stop/taxi/order", func(c fiber.Ctx) error {
+	app.Post("/stop/taxi/order/:orderId/:orderPrice", func(c fiber.Ctx) error {
 		orderIdStr := c.Params("orderId")
 		orderPriceStr := c.Params("orderPrice")
+		orderPriceStr = strings.Replace(orderPriceStr, ",", ".", 1)
 
 		orderPrice, err := strconv.ParseFloat(orderPriceStr, 64)
 		if err != nil {
@@ -61,6 +57,28 @@ func main() {
 
 		return c.JSON(fiber.Map{
 			"order": "stopped",
+		})
+	})
+
+	app.Post("/grade/order/:orderId", func(c fiber.Ctx) error {
+		orderIdStr := c.Params("orderId")
+		orderId, err := strconv.Atoi(orderIdStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("invalid order Id")
+		}
+
+		body := c.Body()
+		var grade request.GradeRequest
+		errJson := json.Unmarshal(body, &grade)
+
+		if errJson != nil {
+			return c.Status(fiber.StatusBadRequest).SendString(errJson.Error())
+		}
+
+		service.GiveRating(orderId, grade)
+
+		return c.JSON(fiber.Map{
+			"Status": fiber.StatusOK,
 		})
 	})
 

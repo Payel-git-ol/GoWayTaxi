@@ -1,7 +1,6 @@
-package models
+package request
 
-type GradeOrder struct {
-	Id       int    `json:"id"`
+type GradeRequest struct {
 	OrderId  int    `json:"order_id"`
 	UserId   int    `json:"user_id"`
 	DriverId int    `json:"driver_id"`
