@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func ProcessMessage(data []byte) error {
+func ProcessMessageAuth(data []byte) error {
 	fmt.Printf("Consumer started")
 	var base struct {
 		Role string `json:"role"`

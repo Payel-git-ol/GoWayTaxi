@@ -12,9 +12,7 @@ func main() {
 	wg.Add(1)
 	go kafka.GetMessageOrder(&wg)
 
-	app.Get("/", func(c *fiber.Ctx) {
-
-	})
+	app.Get("/", func(c fiber.Ctx) {})
 
 	app.Listen(":6000")
 }

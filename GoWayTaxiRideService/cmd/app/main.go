@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"github.com/gofiber/fiber/v3"
 	"strconv"
-	"strings"
 	"sync"
 )
 
@@ -20,6 +19,7 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go kafka.GetMessageUserAndDriver(&wg)
+	go kafka.GetMessageResultPricing(&wg)
 
 	app := fiber.New()
 
@@ -39,10 +39,8 @@ func main() {
 		})
 	})
 
-	app.Post("/stop/taxi/order/:orderId/:orderPrice", func(c fiber.Ctx) error {
+	app.Post("/stop/taxi/order/:orderId", func(c fiber.Ctx) error {
 		orderIdStr := c.Params("orderId")
-		orderPriceStr := c.Params("orderPrice")
-		orderPriceStr = strings.Replace(orderPriceStr, ",", ".", 1)
 
 		orderId, err := strconv.Atoi(orderIdStr)
 		if err != nil {

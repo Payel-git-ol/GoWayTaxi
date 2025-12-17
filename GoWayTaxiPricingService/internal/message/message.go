@@ -7,16 +7,14 @@ import (
 	"fmt"
 )
 
-func ProcessMessage(data []byte) (string, error) {
-	fmt.Printf("Consumer started")
+func ProcessMessage(data []byte) (int, float64, error) {
+	fmt.Println("Consumer started")
 
 	var orderMath models.OrderMath
-
 	if err := json.Unmarshal(data, &orderMath); err != nil {
-		return "", err
+		return 0, 0, err
 	}
 
-	service.PricingOrder(orderMath)
-
-	return "Consumer finished", nil
+	result := service.PricingOrder(orderMath)
+	return orderMath.Id, result, nil
 }

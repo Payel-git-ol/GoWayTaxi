@@ -8,10 +8,10 @@ import (
 	"sync"
 )
 
-func GetMessageUserAndDriver(wg *sync.WaitGroup) {
+func GetMessageResultPricing(wg *sync.WaitGroup) {
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{"localhost:9092"},
-		Topic:   "user-get",
+		Topic:   "pricing-topic-get-price",
 	})
 
 	defer r.Close()
@@ -27,7 +27,7 @@ func GetMessageUserAndDriver(wg *sync.WaitGroup) {
 
 		fmt.Printf("Raw JSON received: %s\n\n", rawJSON)
 
-		if err := message.ProcessMessage(m.Value); err != nil {
+		if err := message.ProcessMessagePricing(m.Value); err != nil {
 			fmt.Println(err)
 		}
 	}

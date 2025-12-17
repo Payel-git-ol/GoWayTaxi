@@ -1,7 +1,7 @@
 package kafka
 
 import (
-	"GoWayTaxiPricingService/internal/service/message"
+	"GoWayTaxiPricingService/internal/message"
 	"context"
 	"fmt"
 	"github.com/segmentio/kafka-go"
@@ -13,22 +13,22 @@ func GetMessageOrder(wg *sync.WaitGroup) {
 		Brokers: []string{"localhost:9092"},
 		Topic:   "pricing-topic",
 	})
-
 	defer r.Close()
 
 	for {
 		m, err := r.ReadMessage(context.Background())
-
 		if err != nil {
 			break
 		}
 
-		fmt.Println(string(m.Value))
+		fmt.Println("Raw JSON:", string(m.Value))
 
-		rawJSON := string(m.Value)
-		fmt.Printf("Raw JSON received: %s\n\n", rawJSON)
-
-		if _, err := message.ProcessMessage(m.Value); err != nil {
+		orderId, result, err := message.ProcessMessage(m.Value)
+		if err != nil {
+			fmt.Println("Error processing:", err)
+			continue
 		}
+
+		SendMessagePriceInRider(orderId, result, "pricing-topic-get-price")
 	}
 }

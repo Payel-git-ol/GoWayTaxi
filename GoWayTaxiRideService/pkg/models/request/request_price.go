@@ -1,5 +1,6 @@
 package request
 
 type RequestPrice struct {
-	Price float64 `json:"price"`
+	OrderId int     `json:"order_id"`
+	Price   float64 `json:"price"`
 }

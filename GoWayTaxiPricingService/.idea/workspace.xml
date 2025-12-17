@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3044d606-6462-4b26-bfa9-bfe8fcb9bded" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/kafka/create_topic.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/kafka/producer_pricing.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/message/process_message.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/pubapi.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GoWayTaxiRideService/cmd/app/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/cmd/app/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/kafka/consumer_rider.go" beforeDir="false" afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/kafka/consumer_rider.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/create_order.go" beforeDir="false" afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/create_order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/save.go" beforeDir="false" afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/saving/save.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/save_care.go" beforeDir="false" afterPath="$PROJECT_DIR$/../GoWayTaxiRideService/internal/service/saving/save_care.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/kafka/create_topic.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/kafka/producer-pricing-rider.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/kafka/consumer_pricing.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/kafka/consumer_pricing.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/message/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/message/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/pricing.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/pricing.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/models/order_math.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/models/order_math.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,35 +22,35 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="36yTHZtBygf3BJRNJaQZvlbYnjA" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.GoLinterPluginOnboarding": "true",
-    "RunOnceActivity.GoLinterPluginStorageMigration": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "master",
-    "go.import.settings.migrated": "true",
-    "last_opened_file_path": "C:/Users/pasaz",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/pasaz/GolandProjects/GoWayTaxi/GoWayTaxiPricingService/main.go"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginOnboarding&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginStorageMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/pasaz&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/pasaz/GolandProjects/GoWayTaxi/GoWayTaxiPricingService/main.go&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
