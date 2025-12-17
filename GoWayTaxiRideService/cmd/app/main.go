@@ -3,6 +3,7 @@ package main
 import (
 	"RideService/internal/kafka"
 	"RideService/internal/service"
+	"RideService/internal/service/saving"
 	"RideService/pkg/database"
 	"RideService/pkg/models/request"
 	"encoding/json"
@@ -14,7 +15,7 @@ import (
 
 func main() {
 	database.InitDB()
-	service.SaveCar()
+	saving.SaveCar()
 
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -43,17 +44,12 @@ func main() {
 		orderPriceStr := c.Params("orderPrice")
 		orderPriceStr = strings.Replace(orderPriceStr, ",", ".", 1)
 
-		orderPrice, err := strconv.ParseFloat(orderPriceStr, 64)
-		if err != nil {
-			return c.Status(fiber.StatusBadRequest).SendString("invalid order price")
-		}
-
 		orderId, err := strconv.Atoi(orderIdStr)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).SendString("invalid order Id")
 		}
 
-		service.CreateOrderEnd(orderId, orderPrice)
+		service.CreateOrderEnd(orderId)
 
 		return c.JSON(fiber.Map{
 			"order": "stopped",

@@ -1,13 +1,14 @@
 package service
 
 import (
+	"RideService/internal/kafka"
 	"RideService/pkg/database"
 	"RideService/pkg/models"
 	"RideService/pkg/models/request"
 	"time"
 )
 
-func CreateOrderStart(order request.RequestOrder) {
+func startOrder(order request.RequestOrder) {
 	currentTime := time.Now()
 
 	new_order := models.Order{
@@ -26,15 +27,29 @@ func CreateOrderStart(order request.RequestOrder) {
 	database.DB.Create(&new_order)
 }
 
-func CreateOrderEnd(orderId int, price float64) {
+func endOrder(orderId int) {
+	kafka.InitKafka()
+
+	var reqPrice request.RequestPrice
+	var reqOrder request.RequestOrder
+
 	currentTime := time.Now()
 
 	database.DB.Model(&models.Order{}).
 		Where("id = ?", orderId).
 		Updates(models.Order{
 			TimeEndOrder: currentTime.Format("2006-01-02 15:04:05"),
-			Price:        price,
 			Status:       "completed",
+			Distance:     reqOrder.Distance,
 		})
+
+	kafka.SendMessagePricing(reqOrder, "pricing-topic")
+
+	database.DB.Model(&models.Order{}).
+		Where("id = ?", orderId).
+		Updates(models.Order{
+			Price: reqPrice.Price,
+		})
+
 	database.DB.Model(&models.Driver{}).Where("id = ?", orderId).Update("status", "available")
 }

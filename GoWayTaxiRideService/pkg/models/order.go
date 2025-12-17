@@ -13,4 +13,5 @@ type Order struct {
 	OrderClass     string  `json:"class"`
 	Price          float64 `json:"price"`
 	Status         string  `json:"status"`
+	Distance       float64 `json:"distance"`
 }

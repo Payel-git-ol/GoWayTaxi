@@ -1,4 +1,4 @@
-package service
+package saving
 
 import (
 	"RideService/pkg/database"

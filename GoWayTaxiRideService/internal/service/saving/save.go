@@ -1,4 +1,4 @@
-package service
+package saving
 
 import (
 	datarider "RideService/pkg/database"
