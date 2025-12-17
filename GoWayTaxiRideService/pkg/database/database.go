@@ -1,6 +1,7 @@
 package database
 
 import (
+	"RideService/pkg/models"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,7 +16,7 @@ func InitDB() {
 		log.Println("No .env file found")
 	}
 
-	dns := os.Getenv("DB_DNS_AUTH")
+	dns := os.Getenv("DB_DNS_RS")
 	if dns == "" {
 		log.Fatal("DB_DNS not set")
 	}
@@ -26,7 +27,13 @@ func InitDB() {
 		log.Fatalf("failed to connect database: %v", err)
 	}
 
-	if err := DB.AutoMigrate(); err != nil {
+	if err := DB.AutoMigrate(
+		&models.User{},
+		&models.Driver{},
+		&models.Car{},
+		&models.Order{},
+		&models.GradeOrder{},
+	); err != nil {
 		log.Fatalf("migration failed: %v", err)
 	}
 }
