@@ -1,6 +1,6 @@
-package models
+package request
 
-type Order struct {
+type RequestOrder struct {
 	Id             int     `json:"id"`
 	UserId         int     `json:"user_id"`
 	DriverId       int     `json:"driver_id"`
@@ -11,5 +11,4 @@ type Order struct {
 	City           string  `json:"city"`
 	OrderClass     string  `json:"class"`
 	Price          float64 `json:"price"`
-	Status         string  `json:"status"`
 }
