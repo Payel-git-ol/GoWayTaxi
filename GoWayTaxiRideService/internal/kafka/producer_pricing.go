@@ -1,6 +1,7 @@
 package kafka
 
 import (
+	"RideService/metrics"
 	"RideService/pkg/models/request"
 	"context"
 	"encoding/json"
@@ -10,7 +11,7 @@ import (
 
 func SendMessagePricing(req request.RequestOrder, topic string) {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{"kafka:9092"},
 		Topic:   topic,
 	})
 
@@ -24,6 +25,8 @@ func SendMessagePricing(req request.RequestOrder, topic string) {
 	err = w.WriteMessages(context.Background(),
 		kafka.Message{Value: jsonData},
 	)
+
+	metrics.KafkaMessagesOut.Inc()
 
 	if err != nil {
 		panic(err)

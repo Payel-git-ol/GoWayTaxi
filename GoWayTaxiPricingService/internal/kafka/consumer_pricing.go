@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"GoWayTaxiPricingService/internal/message"
+	"GoWayTaxiPricingService/metrics"
 	"context"
 	"fmt"
 	"github.com/segmentio/kafka-go"
@@ -10,7 +11,7 @@ import (
 
 func GetMessageOrder(wg *sync.WaitGroup) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{"kafka:9092"},
 		Topic:   "pricing-topic",
 	})
 	defer r.Close()
@@ -22,6 +23,8 @@ func GetMessageOrder(wg *sync.WaitGroup) {
 		}
 
 		fmt.Println("Raw JSON:", string(m.Value))
+
+		metrics.KafkaMessagesIn.Inc()
 
 		orderId, result, err := message.ProcessMessage(m.Value)
 		if err != nil {

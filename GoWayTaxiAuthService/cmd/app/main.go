@@ -2,10 +2,14 @@ package main
 
 import (
 	"GoWayTaxiAuthService/internal/auth"
+	"GoWayTaxiAuthService/metrics"
 	"GoWayTaxiAuthService/pkg/database"
 	"GoWayTaxiAuthService/pkg/models/request"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -118,5 +122,15 @@ func main() {
 		})
 	})
 
+	go func() {
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", promhttp.Handler())
+		log.Println("metrics server on :9100")
+		if err := http.ListenAndServe(":9100", mux); err != nil {
+			log.Fatalf("metrics server error: %v", err)
+		}
+	}()
+
+	metrics.Init()
 	app.Listen(":3000")
 }

@@ -1,0 +1,199 @@
+version: "3.9"
+
+services:
+  auth-service:
+    build: ./GoWayTaxiAuthService
+    ports:
+      - "3000:3000"
+    expose:
+      - "9100"
+    env_file:
+      - ./GoWayTaxiAuthService/.env
+    networks:
+      - monitoring
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+    volumes:
+      - ./GoWayTaxiAuthService/.env:/app/.env
+
+  user-service:
+    build: ./GoWayTaxiUserService
+    ports:
+      - "4000:4000"
+    expose:
+      - "9100"
+    env_file:
+      - ./GoWayTaxiUserService/.env
+    networks:
+      - monitoring
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    volumes:
+      - ./GoWayTaxiUserService/.env:/app/.env
+
+  ride-service:
+    build: ./GoWayTaxiRideService
+    ports:
+      - "5000:5000"
+    expose:
+      - "9100"
+    env_file:
+      - ./GoWayTaxiRideService/.env
+    networks:
+      - monitoring
+    depends_on:
+      postgres-rider:
+        condition: service_healthy
+    volumes:
+      - ./GoWayTaxiRideService/.env:/app/.env
+
+  pricing-service:
+    build: ./GoWayTaxiPricingService
+    ports:
+      - "6000:6000"
+    expose:
+      - "9100"
+    networks:
+      - monitoring
+
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth
+    environment:
+      POSTGRES_USER: taxi-auth
+      POSTGRES_PASSWORD: taxi123
+      POSTGRES_DB: taxi_db_auth
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxi-auth -d taxi_db_auth"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-user:
+    image: postgres:15
+    container_name: postgres-user
+    environment:
+      POSTGRES_USER: taxi-user
+      POSTGRES_PASSWORD: taxi123
+      POSTGRES_DB: taxi_db_user
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_user_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxi-user -d taxi_db_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-rider:
+    image: postgres:15
+    container_name: postgres-rider
+    environment:
+      POSTGRES_USER: taxi-rider
+      POSTGRES_PASSWORD: taxi123
+      POSTGRES_DB: taxi_db_rider
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_rider_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxi-rider -d taxi_db_rider"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    restart: always
+    networks:
+      - monitoring
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    restart: always
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "9000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitoring
+
+  loki:
+    image: grafana/loki:3.0.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yaml
+    volumes:
+      - ./monitoring/loki-config.yaml:/etc/loki/loki-config.yaml
+    networks:
+      - monitoring
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    volumes:
+      - ./monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - monitoring
+
+volumes:
+  postgres_auth_data:
+  postgres_user_data:
+  postgres_rider_data:
+  grafana-data:
+
+networks:
+  monitoring:

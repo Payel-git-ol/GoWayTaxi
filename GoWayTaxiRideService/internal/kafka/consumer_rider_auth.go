@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"RideService/internal/service/message"
+	"RideService/metrics"
 	"context"
 	"fmt"
 	"github.com/segmentio/kafka-go"
@@ -10,7 +11,7 @@ import (
 
 func GetMessageUserAndDriver(wg *sync.WaitGroup) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{"kafka:9092"},
 		Topic:   "user-get",
 	})
 
@@ -26,6 +27,8 @@ func GetMessageUserAndDriver(wg *sync.WaitGroup) {
 		rawJSON := string(m.Value)
 
 		fmt.Printf("Raw JSON received: %s\n\n", rawJSON)
+
+		metrics.KafkaMessagesIn.Inc()
 
 		if err := message.ProcessMessageAuth(m.Value); err != nil {
 			fmt.Println(err)

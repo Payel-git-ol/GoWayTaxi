@@ -4,10 +4,14 @@ import (
 	"RideService/internal/kafka"
 	"RideService/internal/service"
 	"RideService/internal/service/saving"
+	"RideService/metrics"
 	"RideService/pkg/database"
 	"RideService/pkg/models/request"
 	"encoding/json"
 	"github.com/gofiber/fiber/v3"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"log"
+	"net/http"
 	"strconv"
 	"sync"
 )
@@ -76,5 +80,15 @@ func main() {
 		})
 	})
 
+	go func() {
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", promhttp.Handler())
+		log.Println("metrics server on :9100")
+		if err := http.ListenAndServe(":9100", mux); err != nil {
+			log.Fatalf("metrics server error: %v", err)
+		}
+	}()
+
+	metrics.Init()
 	app.Listen(":5000")
 }

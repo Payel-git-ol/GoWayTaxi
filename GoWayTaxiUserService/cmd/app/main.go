@@ -2,10 +2,14 @@ package main
 
 import (
 	"GoWayTaxiUserService/internal/kafka"
+	"GoWayTaxiUserService/metrics"
 	"GoWayTaxiUserService/pkg/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"log"
+	"net/http"
 	"os"
 	"strings"
 	"sync"
@@ -26,7 +30,12 @@ func main() {
 	}))
 
 	jwtKey := []byte(os.Getenv("JWT_TOKEN_US"))
-	app.Use(jwtMiddleware(jwtKey))
+	app.Use(func(c fiber.Ctx) error {
+		if c.Path() == "/metrics" {
+			return c.Next()
+		}
+		return jwtMiddleware(jwtKey)(c)
+	})
 
 	app.Get("/me", func(c fiber.Ctx) error {
 		user := c.Locals("user")
@@ -34,6 +43,16 @@ func main() {
 		return c.JSON(user)
 	})
 
+	go func() {
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", promhttp.Handler())
+		log.Println("metrics server on :9100")
+		if err := http.ListenAndServe(":9100", mux); err != nil {
+			log.Fatalf("metrics server error: %v", err)
+		}
+	}()
+
+	metrics.Init()
 	app.Listen(":4000")
 }
 

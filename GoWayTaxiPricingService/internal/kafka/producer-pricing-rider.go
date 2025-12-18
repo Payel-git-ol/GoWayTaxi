@@ -1,6 +1,7 @@
 package kafka
 
 import (
+	"GoWayTaxiPricingService/metrics"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -32,5 +33,6 @@ func SendMessagePriceInRider(orderId int, res float64, topic string) {
 		panic(err)
 	}
 
+	metrics.KafkaMessagesOut.Inc()
 	fmt.Printf("Отправлено в топик '%s': %v\n", topic, string(jsonData))
 }

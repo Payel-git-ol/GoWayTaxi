@@ -1,6 +1,7 @@
 package kafka
 
 import (
+	"GoWayTaxiAuthService/metrics"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -9,7 +10,7 @@ import (
 
 func SendMessage[T any](topic string, data T) {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{"kafka:9092"},
 		Topic:   topic,
 	})
 
@@ -26,6 +27,8 @@ func SendMessage[T any](topic string, data T) {
 	if err != nil {
 		panic(err)
 	}
+
+	metrics.KafkaMessagesOut.Inc()
 
 	fmt.Printf("Отправлено в топик '%s': %v\n", topic, string(jsonData))
 }

@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"GoWayTaxiUserService/internal/service"
+	"GoWayTaxiUserService/metrics"
 	"GoWayTaxiUserService/pkg/models"
 	"context"
 	"encoding/json"
@@ -12,7 +13,7 @@ import (
 
 func GetMessageAuth(wg *sync.WaitGroup) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{"kafka:9092"},
 		Topic:   "user-created",
 	})
 
@@ -28,6 +29,8 @@ func GetMessageAuth(wg *sync.WaitGroup) {
 		rawJSON := string(m.Value)
 
 		fmt.Println("Raw JSON received: %s\n", rawJSON)
+
+		metrics.KafkaMessagesOut.Inc()
 
 		if err := processMessage(m.Value); err != nil {
 			fmt.Println(err)
