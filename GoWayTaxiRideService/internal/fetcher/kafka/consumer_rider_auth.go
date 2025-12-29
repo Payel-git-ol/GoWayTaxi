@@ -1,7 +1,7 @@
 package kafka
 
 import (
-	"RideService/internal/service/message"
+	"RideService/internal/core/service/message"
 	"RideService/metrics"
 	"context"
 	"fmt"

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"GoWayTaxiAuthService/internal/auth"
+	"GoWayTaxiAuthService/internal/core/auth"
 	"GoWayTaxiAuthService/metrics"
 	"GoWayTaxiAuthService/pkg/database"
-	"GoWayTaxiAuthService/pkg/models/request"
+	"GoWayTaxiAuthService/pkg/models"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -23,7 +23,7 @@ func main() {
 	}))
 
 	app.Post("/api/reg", func(c fiber.Ctx) error {
-		var req request.AuthRequest
+		var req models.AuthRequest
 
 		if err := c.Bind().Body(&req); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -45,7 +45,7 @@ func main() {
 	})
 
 	app.Post("/api/auth", func(c fiber.Ctx) error {
-		var req request.AuthRequest
+		var req models.AuthRequest
 		if err := c.Bind().Body(&req); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "Invalid request format",
@@ -73,7 +73,7 @@ func main() {
 	})
 
 	app.Post("/api/driver/reg", func(c fiber.Ctx) error {
-		var req request.AuthRequest
+		var req models.AuthRequest
 
 		if err := c.Bind().Body(&req); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -95,7 +95,7 @@ func main() {
 	})
 
 	app.Post("/api/driver/auth", func(c fiber.Ctx) error {
-		var req request.AuthRequest
+		var req models.AuthRequest
 		if err := c.Bind().Body(&req); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "Invalid request format",

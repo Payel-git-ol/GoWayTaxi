@@ -1,7 +1,7 @@
 package service
 
 import (
-	"RideService/internal/kafka"
+	kafka2 "RideService/internal/fetcher/kafka"
 	"RideService/pkg/database"
 	"RideService/pkg/models"
 	"RideService/pkg/models/request"
@@ -31,7 +31,7 @@ func startOrder(order request.RequestOrder) {
 }
 
 func endOrder(orderId int) {
-	kafka.InitKafka()
+	kafka2.InitKafka()
 
 	var order models.Order
 	if err := database.DB.First(&order, orderId).Error; err != nil {
@@ -60,7 +60,7 @@ func endOrder(orderId int) {
 		Distance:       order.Distance,
 	}
 
-	kafka.SendMessagePricing(reqOrder, "pricing-topic")
+	kafka2.SendMessagePricing(reqOrder, "pricing-topic")
 
 	var price request.RequestPrice
 

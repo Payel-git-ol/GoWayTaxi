@@ -1,7 +1,7 @@
 package kafka
 
 import (
-	"GoWayTaxiPricingService/internal/message"
+	"GoWayTaxiPricingService/internal/core/message"
 	"GoWayTaxiPricingService/metrics"
 	"context"
 	"fmt"

@@ -1,16 +1,15 @@
 package auth
 
 import (
-	"GoWayTaxiAuthService/internal/kafka"
+	kafka2 "GoWayTaxiAuthService/internal/fetcher/kafka"
 	"GoWayTaxiAuthService/pkg/database"
 	"GoWayTaxiAuthService/pkg/models"
-	"GoWayTaxiAuthService/pkg/models/request"
 	"errors"
 	"log"
 	"strconv"
 )
 
-func registerEntity(entity interface{}, role string, req request.AuthRequest) (string, error) {
+func registerEntity(entity interface{}, role string, req models.AuthRequest) (string, error) {
 	jwtKey, err := getJWTKey()
 	if err != nil {
 		return "", err
@@ -34,8 +33,8 @@ func registerEntity(entity interface{}, role string, req request.AuthRequest) (s
 		}
 
 		InitKafka()
-		kafka.SendMessage("user-created", e)
-		kafka.SendMessage("user-get", e)
+		kafka2.SendMessage("user-created", e)
+		kafka2.SendMessage("user-get", e)
 		return generateToken(strconv.Itoa(e.Id), e.Email, e.Role, jwtKey)
 
 	case *models.Driver:
@@ -50,15 +49,15 @@ func registerEntity(entity interface{}, role string, req request.AuthRequest) (s
 		}
 
 		InitKafka()
-		kafka.SendMessage("user-created", e)
-		kafka.SendMessage("user-get", e)
+		kafka2.SendMessage("user-created", e)
+		kafka2.SendMessage("user-get", e)
 		return generateToken(strconv.Itoa(e.Id), e.Email, e.Role, jwtKey)
 	}
 
 	return "", errors.New("unsupported entity type")
 }
 
-func authenticateEntity(entity interface{}, req request.AuthRequest) (string, error) {
+func authenticateEntity(entity interface{}, req models.AuthRequest) (string, error) {
 	jwtKey, err := getJWTKey()
 	if err != nil {
 		return "", err
@@ -92,7 +91,7 @@ func authenticateEntity(entity interface{}, req request.AuthRequest) (string, er
 func InitKafka() {
 	topics := []string{"user-created", "user-get"}
 	for _, t := range topics {
-		if err := kafka.CreateTopic("localhost:9092", t); err != nil {
+		if err := kafka2.CreateTopic("localhost:9092", t); err != nil {
 			log.Printf("topic %s already exists or failed: %v", t, err)
 		}
 	}

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"RideService/internal/kafka"
-	"RideService/internal/service"
-	"RideService/internal/service/saving"
+	service2 "RideService/internal/core/service"
+	"RideService/internal/core/service/saving"
+	kafka2 "RideService/internal/fetcher/kafka"
 	"RideService/metrics"
 	"RideService/pkg/database"
 	"RideService/pkg/models/request"
@@ -22,8 +22,8 @@ func main() {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go kafka.GetMessageUserAndDriver(&wg)
-	go kafka.GetMessageResultPricing(&wg)
+	go kafka2.GetMessageUserAndDriver(&wg)
+	go kafka2.GetMessageResultPricing(&wg)
 
 	app := fiber.New()
 
@@ -36,7 +36,7 @@ func main() {
 			return err
 		}
 
-		service.CreateOrderStart(order)
+		service2.CreateOrderStart(order)
 
 		return c.JSON(fiber.Map{
 			"order": "run",
@@ -51,7 +51,7 @@ func main() {
 			return c.Status(fiber.StatusBadRequest).SendString("invalid order Id")
 		}
 
-		service.CreateOrderEnd(orderId)
+		service2.CreateOrderEnd(orderId)
 
 		return c.JSON(fiber.Map{
 			"order": "stopped",
@@ -73,7 +73,7 @@ func main() {
 			return c.Status(fiber.StatusBadRequest).SendString(errJson.Error())
 		}
 
-		service.GiveRating(orderId, grade)
+		service2.GiveRating(orderId, grade)
 
 		return c.JSON(fiber.Map{
 			"Status": fiber.StatusOK,

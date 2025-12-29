@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoWayTaxiUserService/internal/kafka"
+	"GoWayTaxiUserService/internal/fetcher/kafka"
 	"GoWayTaxiUserService/metrics"
 	"GoWayTaxiUserService/pkg/database"
 	"github.com/gofiber/fiber/v3"

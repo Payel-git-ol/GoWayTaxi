@@ -1,7 +1,7 @@
 package kafka
 
 import (
-	"GoWayTaxiUserService/internal/service"
+	"GoWayTaxiUserService/internal/core/service"
 	"GoWayTaxiUserService/metrics"
 	"GoWayTaxiUserService/pkg/models"
 	"context"

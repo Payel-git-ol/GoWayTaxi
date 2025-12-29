@@ -1,4 +1,4 @@
-package request
+package models
 
 type AuthRequest struct {
 	Role     string `json:"role"`

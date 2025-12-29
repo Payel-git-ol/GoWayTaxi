@@ -1,7 +1,7 @@
 package message
 
 import (
-	"GoWayTaxiPricingService/internal/service"
+	"GoWayTaxiPricingService/internal/core/service"
 	"GoWayTaxiPricingService/pkg/models"
 	"encoding/json"
 	"fmt"

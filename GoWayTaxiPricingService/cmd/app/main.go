@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoWayTaxiPricingService/internal/kafka"
+	"GoWayTaxiPricingService/internal/fetcher/kafka"
 	"GoWayTaxiPricingService/metrics"
 	"github.com/gofiber/fiber/v3"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

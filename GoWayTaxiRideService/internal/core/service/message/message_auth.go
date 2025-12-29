@@ -1,7 +1,7 @@
 package message
 
 import (
-	"RideService/internal/service/saving"
+	"RideService/internal/core/service/saving"
 	modelsrider "RideService/pkg/models"
 	"encoding/json"
 	"fmt"
